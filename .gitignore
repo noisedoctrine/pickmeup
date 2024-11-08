@@ -1,4 +1,12 @@
+# Ignore logs and checkpoints
 .ipynb_checkpoints/
 *.pyc
 *.log
+
+# Ignore large data files
 data/
+
+# Ignore environment files, API keys, secrets
+.env
+config/secrets.json
+keys/
