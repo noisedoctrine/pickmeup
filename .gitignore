@@ -5,6 +5,7 @@
 
 # Ignore large data files
 data/
+*.zip
 
 # Ignore environment files, API keys, secrets
 .env
