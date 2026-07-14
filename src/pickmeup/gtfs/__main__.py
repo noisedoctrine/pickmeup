@@ -59,13 +59,19 @@ def main() -> None:
 
     if args.command == "export-static":
         metadata = _read_metadata(args.metadata)
-        source_url = args.source_url or metadata.get("source_url")
-        acquired_at = args.acquired_at or metadata.get("loaded_at")
+        metadata_source = metadata.get("source_url")
+        metadata_loaded_at = metadata.get("loaded_at")
+        source_url = args.source_url or (
+            str(metadata_source) if metadata_source else None
+        )
+        acquired_at = args.acquired_at or (
+            str(metadata_loaded_at) if metadata_loaded_at else None
+        )
         feed = GTFSFeed.from_zip(args.feed, source_url=source_url)
         manifest = export_static_snapshot(
             feed,
             args.site_root,
-            acquired_at=str(acquired_at) if acquired_at else None,
+            acquired_at=acquired_at,
         )
         print(json.dumps(manifest, indent=2))
         return
