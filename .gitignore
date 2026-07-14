@@ -3,10 +3,15 @@
 *.pyc
 *.log
 
-# Ignore large and generated data files
-data/
+# Ignore generated data while allowing curated runtime inputs
+data/*
+!data/curated/
+!data/curated/**
 *.zip
 *.pickle
+
+# Preserve the original prototype interchange snapshot
+!notebooks/legacy/interchanges.pickle
 
 # Keep the small interchange inspection CSV tracked for validation
 !_interchanges_csv_for_inspection_only.csv
