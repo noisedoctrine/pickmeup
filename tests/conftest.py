@@ -57,4 +57,5 @@ def sample_gtfs_zip(tmp_path: Path) -> Path:
     with zipfile.ZipFile(path, "w") as archive:
         for filename, content in tables.items():
             archive.writestr(filename, content)
+        archive.writestr("__MACOSX/._agency.txt", b"\x00\x05\x16\x07\xa3binary metadata")
     return path
