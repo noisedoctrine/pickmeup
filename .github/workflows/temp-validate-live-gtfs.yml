@@ -19,37 +19,16 @@ jobs:
           python-version: "3.12"
       - run: python -m pip install -e ".[dev]"
       - run: pytest -q
-      - run: ruff check .
-      - run: mypy --ignore-missing-imports src/pickmeup
-      - name: Download current Rapid KL rail feed
-        run: python -m pickmeup.gtfs download /tmp/rapid-rail-kl.zip > /tmp/download-summary.json
-      - name: Summarize current feed
-        run: python -m pickmeup.gtfs summary /tmp/rapid-rail-kl.zip > /tmp/live-summary.json
-      - name: Inspect current feed details
+      - name: Run Ruff
         run: |
-          python - <<'PY'
-          from pickmeup.gtfs import GTFSFeed
-
-          feed = GTFSFeed.from_zip("/tmp/rapid-rail-kl.zip")
-          feed.table("routes").to_csv("/tmp/live-routes.csv", index=False)
-          feed.service_time_bounds().to_csv("/tmp/live-time-bounds.csv", index=False)
-          PY
-      - name: Inspect current feed quality
-        run: python -m pickmeup.gtfs quality /tmp/rapid-rail-kl.zip > /tmp/live-quality.txt
-      - name: Check curated stop IDs
-        run: python -m pickmeup.gtfs curated /tmp/rapid-rail-kl.zip data/curated/interchange_candidate_dispositions.json > /tmp/live-curated.txt
-      - name: Plot current feed
-        run: python -m pickmeup.gtfs plot /tmp/rapid-rail-kl.zip /tmp/rapid-rail-kl.png
-      - name: Upload live validation results
+          set +e
+          ruff check . > /tmp/ruff.txt 2>&1
+          status=$?
+          cat /tmp/ruff.txt
+          exit $status
+      - name: Upload Ruff output
+        if: always()
         uses: actions/upload-artifact@v4
         with:
-          name: live-gtfs-validation-details
-          path: |
-            /tmp/download-summary.json
-            /tmp/live-summary.json
-            /tmp/live-routes.csv
-            /tmp/live-time-bounds.csv
-            /tmp/live-quality.txt
-            /tmp/live-curated.txt
-            /tmp/rapid-rail-kl.metadata.json
-            /tmp/rapid-rail-kl.png
+          name: ruff-output
+          path: /tmp/ruff.txt
