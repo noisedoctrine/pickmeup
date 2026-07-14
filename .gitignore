@@ -3,9 +3,10 @@
 *.pyc
 *.log
 
-# Ignore large data files
+# Ignore large and generated data files
 data/
 *.zip
+*.pickle
 
 # Ignore environment files, API keys, secrets
 .env
