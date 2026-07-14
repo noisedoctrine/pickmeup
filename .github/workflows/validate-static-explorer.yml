@@ -22,7 +22,22 @@ jobs:
       - run: python -m pip install -e ".[dev]"
       - run: pytest -q
       - run: ruff check src tests
-      - run: mypy --ignore-missing-imports src/pickmeup
+
+      - name: Run mypy
+        run: |
+          set +e
+          mypy --ignore-missing-imports src/pickmeup > /tmp/mypy.txt 2>&1
+          status=$?
+          cat /tmp/mypy.txt
+          exit $status
+
+      - name: Upload mypy output
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: mypy-output
+          path: /tmp/mypy.txt
+
       - run: node --check docs/app.js
 
       - name: Check pinned CDN assets
