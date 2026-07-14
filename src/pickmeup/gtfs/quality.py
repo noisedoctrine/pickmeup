@@ -247,36 +247,52 @@ def _sequence_findings(feed: GTFSFeed) -> Iterable[QualityFinding]:
 
 
 def _relationship_findings(feed: GTFSFeed) -> Iterable[QualityFinding]:
-    membership = feed.station_routes()
-    shared = membership.groupby("stop_id")["route_id"].nunique()
-    shared = shared[shared > 1]
-    if not shared.empty:
-        yield QualityFinding(
-            "info",
-            "multi_route_stop_id",
-            "stops",
-            int(len(shared)),
-            "Stop IDs are used by more than one route through normal GTFS relationships",
-            tuple(shared.index.astype(str)[:10]),
-        )
+    ambiguous_tables = [
+        table_name
+        for table_name in ("routes", "trips", "stops")
+        if feed.table(table_name).duplicated(list(PRIMARY_KEYS[table_name]), keep=False).any()
+    ]
 
-    if "route_id" in feed.table("stop_times").columns:
-        membership = feed.route_stop_membership()
-        mismatch = membership[
-            membership["stop_times_route_id"].astype(str).str.strip().ne("")
-            & membership["route_id"].astype(str).str.strip().ne("")
-            & membership["stop_times_route_id"].astype(str).ne(membership["route_id"].astype(str))
-        ]
-        if not mismatch.empty:
-            pairs = mismatch[["stop_times_route_id", "route_id"]].drop_duplicates().astype(str).agg(" -> ".join, axis=1)
+    if ambiguous_tables:
+        yield QualityFinding(
+            "warning",
+            "relationship_analysis_skipped",
+            None,
+            len(ambiguous_tables),
+            "Derived relationship checks were skipped because parent identifiers are duplicated",
+            tuple(ambiguous_tables),
+        )
+    else:
+        membership = feed.station_routes()
+        shared = membership.groupby("stop_id")["route_id"].nunique()
+        shared = shared[shared > 1]
+        if not shared.empty:
             yield QualityFinding(
                 "info",
-                "nonstandard_route_id_disagreement",
-                "stop_times",
-                int(len(mismatch)),
-                "Non-standard stop_times.route_id differs from trips.route_id; trips.route_id should be authoritative",
-                tuple(pairs.head(10)),
+                "multi_route_stop_id",
+                "stops",
+                int(len(shared)),
+                "Stop IDs are used by more than one route through normal GTFS relationships",
+                tuple(shared.index.astype(str)[:10]),
             )
+
+        if "route_id" in feed.table("stop_times").columns:
+            membership = feed.route_stop_membership()
+            mismatch = membership[
+                membership["stop_times_route_id"].astype(str).str.strip().ne("")
+                & membership["route_id"].astype(str).str.strip().ne("")
+                & membership["stop_times_route_id"].astype(str).ne(membership["route_id"].astype(str))
+            ]
+            if not mismatch.empty:
+                pairs = mismatch[["stop_times_route_id", "route_id"]].drop_duplicates().astype(str).agg(" -> ".join, axis=1)
+                yield QualityFinding(
+                    "info",
+                    "nonstandard_route_id_disagreement",
+                    "stop_times",
+                    int(len(mismatch)),
+                    "Non-standard stop_times.route_id differs from trips.route_id; trips.route_id should be authoritative",
+                    tuple(pairs.head(10)),
+                )
 
     if "parent_station" not in feed.table("stops").columns:
         yield QualityFinding("info", "station_hierarchy", "stops", 1, "stops.txt has no parent_station column")
