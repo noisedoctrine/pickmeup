@@ -44,15 +44,17 @@ jobs:
           git diff --exit-code -- docs/data
           test -z "$(git ls-files --others --exclude-standard docs/data)"
 
-      - name: Check deterministic export
+      - name: Check deterministic immutable export
         run: |
-          cp -R docs/data /tmp/first-export
-          rm -rf docs/data
+          snapshot_id=$(python -c 'import json; print(json.load(open("docs/data/manifest.json"))["active_snapshot"])')
+          cp -R "docs/data/snapshots/$snapshot_id" /tmp/first-export
+          rm -rf "docs/data/snapshots/$snapshot_id"
           python -m pickmeup.gtfs export-static \
             /tmp/rapid-rail-kl.zip \
             docs \
             --metadata /tmp/rapid-rail-kl.metadata.json
-          diff -r /tmp/first-export docs/data
+          diff -r /tmp/first-export "docs/data/snapshots/$snapshot_id"
+          git diff --exit-code -- docs/data
 
       - name: Validate exported contract
         run: |
