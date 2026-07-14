@@ -1,0 +1,97 @@
+{
+  "findings": [
+    {
+      "category": "nonstandard_columns",
+      "count": 2,
+      "examples": [
+        "category",
+        "status"
+      ],
+      "message": "Columns outside the core GTFS Schedule reference are present",
+      "severity": "info",
+      "table": "routes"
+    },
+    {
+      "category": "nonstandard_columns",
+      "count": 2,
+      "examples": [
+        "direction_id",
+        "route_id"
+      ],
+      "message": "Columns outside the core GTFS Schedule reference are present",
+      "severity": "info",
+      "table": "stop_times"
+    },
+    {
+      "category": "nonstandard_columns",
+      "count": 6,
+      "examples": [
+        "category",
+        "geometry",
+        "isOKU",
+        "route_id",
+        "search",
+        "status"
+      ],
+      "message": "Columns outside the core GTFS Schedule reference are present",
+      "severity": "info",
+      "table": "stops"
+    },
+    {
+      "category": "missing_optional_table",
+      "count": 1,
+      "examples": [],
+      "message": "calendar_dates.txt is not present",
+      "severity": "info",
+      "table": "calendar_dates"
+    },
+    {
+      "category": "missing_optional_table",
+      "count": 1,
+      "examples": [],
+      "message": "transfers.txt is not present",
+      "severity": "info",
+      "table": "transfers"
+    },
+    {
+      "category": "after_midnight_service_time",
+      "count": 18,
+      "examples": [
+        "24:00:00"
+      ],
+      "message": "end_time contains values at or after 24:00:00",
+      "severity": "info",
+      "table": "frequencies"
+    },
+    {
+      "category": "nonstandard_route_id_disagreement",
+      "count": 690,
+      "examples": [
+        "AGL -> AG",
+        "KJL -> KJ",
+        "MRL -> MR",
+        "SPL -> PH",
+        "SAL -> SA"
+      ],
+      "message": "Non-standard stop_times.route_id differs from trips.route_id; trips.route_id should be authoritative",
+      "severity": "info",
+      "table": "stop_times"
+    },
+    {
+      "category": "station_hierarchy",
+      "count": 1,
+      "examples": [],
+      "message": "stops.txt has no parent_station column",
+      "severity": "info",
+      "table": "stops"
+    },
+    {
+      "category": "transfer_data",
+      "count": 1,
+      "examples": [],
+      "message": "No transfers.txt table is available; curated interchange evidence remains relevant",
+      "severity": "info",
+      "table": "transfers"
+    }
+  ]
+}
