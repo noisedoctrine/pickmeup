@@ -63,6 +63,21 @@ def test_quality_report_surfaces_quirks_without_rejecting_feed(sample_gtfs_zip: 
     assert not ((findings["category"] == "broken_reference") & (findings["severity"] == "error")).any()
 
 
+def test_quality_report_handles_duplicate_parent_ids(sample_gtfs_zip: Path, tmp_path: Path) -> None:
+    duplicate_zip = tmp_path / "duplicate-trip.zip"
+    with zipfile.ZipFile(sample_gtfs_zip) as source, zipfile.ZipFile(duplicate_zip, "w") as target:
+        for member in source.infolist():
+            payload = source.read(member.filename)
+            if member.filename == "trips.txt":
+                payload += b"R1,weekday,T1,Gamma again,0,S1\n"
+            target.writestr(member, payload)
+
+    findings = inspect_feed(GTFSFeed.from_zip(duplicate_zip)).to_frame()
+    categories = set(findings["category"])
+    assert "duplicate_key" in categories
+    assert "relationship_analysis_skipped" in categories
+
+
 def test_summary_and_provenance_are_json_serializable(sample_gtfs_zip: Path, tmp_path: Path) -> None:
     feed = GTFSFeed.from_zip(sample_gtfs_zip)
     assert feed.summary()["route_count"] == 2
