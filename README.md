@@ -1,67 +1,88 @@
 # pickmeup
 
-PickMeUp is an experimental journey-planning project for finding a meeting point where a passenger using public transit can meet a driver before both continue to a shared destination.
+PickMeUp is a personal transport experiment built around a question that sounded fun enough to investigate:
 
-## Project status
+> Where could someone taking the train meet someone driving, so they can continue to the same destination without making either journey unnecessarily awful?
 
-The repository currently contains an incomplete 2024 research prototype. It is preserved for reference in [`notebooks/original_exploration.ipynb`](notebooks/original_exploration.ipynb), but it is not yet an installable or supported application.
+Kuala Lumpur is the test bed. The interesting parts are the data, maps, route choices, waiting, transfers, and all the tradeoffs that appear once two journeys have to meet in the middle.
 
-The prototype is notebook-driven, may require external data and an OpenRouteService API key, and contains exploratory assumptions that have not yet been validated for production use. New implementation work will be developed as package code under `src/pickmeup/` with tests under `tests/`.
+## Where the project is now
 
-Legacy interchange evidence is preserved in `notebooks/legacy/interchanges.pickle` and `_interchanges_csv_for_inspection_only.csv`. OSINT-reviewed candidate dispositions are stored in the machine-readable `data/curated/interchange_candidate_dispositions.json`; explanatory methodology is documented in `docs/interchange_candidate_validation.md`.
+The original 2024 notebook is preserved in [`notebooks/original_exploration.ipynb`](notebooks/original_exploration.ipynb). It contains the first GTFS, NetworkX, OpenRouteService, interchange, and plotting experiments. It also contains shortcuts and assumptions that are useful to study rather than blindly carry forward.
 
-## Intended behavior
+The current package work starts with a GTFS data workbench under `src/pickmeup/gtfs/`. It can:
 
-Given:
+- download or reopen a Rapid KL rail GTFS ZIP;
+- keep every included table available as raw string-valued pandas DataFrames;
+- parse GTFS service times, including values after midnight such as `24:15:00`;
+- derive route, stop, trip, pattern, and service-time views through normal GTFS relationships;
+- report feed quirks without pretending every oddity makes the whole feed unusable;
+- check curated interchange stop IDs against a feed snapshot;
+- plot route shapes and station locations for quick inspection.
 
-- a passenger origin,
-- a driver origin,
-- a shared destination, and
-- a departure time,
+It does **not** choose transit routes or meeting points yet. That comes after the data is understood well enough to make the experiments interesting.
 
-PickMeUp is intended to rank feasible transit meeting candidates by considering passenger travel, driver travel, waiting, transfers, walking, and the onward drive to the final destination. Recommendations will also be compared with the direct-pickup baseline in which the driver first collects the passenger at their origin.
-
-This intended behavior is not yet available as a stable package or command-line interface.
-
-## Repository layout
-
-- `notebooks/original_exploration.ipynb` — preserved 2024 prototype and exploration.
-- `notebooks/legacy/interchanges.pickle` — original serialized interchange DataFrame retained as legacy evidence.
-- `_interchanges_csv_for_inspection_only.csv` — readable export of the legacy interchange data.
-- `data/curated/interchange_candidate_dispositions.json` — parseable OSINT decisions for reviewed candidates.
-- `docs/interchange_candidate_validation.md` — candidate-generation and OSINT-validation method.
-- `src/pickmeup/` — package code for the recovered implementation.
-- `tests/` — automated tests for package code.
-
-## Development
+## Setup
 
 PickMeUp requires Python 3.12 or newer.
-
-Create a virtual environment and install the package from the repository root:
 
 ```bash
 python -m venv .venv
 source .venv/bin/activate
-python -m pip install -e .
-python -c "import pickmeup"
+python -m pip install -e ".[dev]"
 ```
 
 On Windows, activate the environment with `.venv\Scripts\activate`.
 
-Install the development tools used for tests, formatting, linting, and type checking with:
+## GTFS workbench
+
+Download the current official Rapid KL rail feed:
 
 ```bash
-python -m pip install -e ".[dev]"
+python -m pickmeup.gtfs download data/raw/rapid-rail-kl.zip
 ```
 
-Runtime and development dependency ranges are declared in `pyproject.toml`.
+The ZIP is ignored by Git. A metadata sidecar is written next to it with the source URL, checksum, filenames, row counts, and load time.
 
-## Environment variables
-
-Copy the example file when live OpenRouteService access is needed:
+Inspect a local feed:
 
 ```bash
-cp .env.example .env
+python -m pickmeup.gtfs summary data/raw/rapid-rail-kl.zip
+python -m pickmeup.gtfs quality data/raw/rapid-rail-kl.zip
+python -m pickmeup.gtfs curated \
+  data/raw/rapid-rail-kl.zip \
+  data/curated/interchange_candidate_dispositions.json
+python -m pickmeup.gtfs plot \
+  data/raw/rapid-rail-kl.zip \
+  data/raw/rapid-rail-kl.png
 ```
 
-Set `OPENROUTESERVICE` in `.env` to your API key. Do not commit `.env` or any real credentials. Importing `pickmeup` does not require the key and does not make network calls.
+The Python API is intentionally small and notebook-friendly:
+
+```python
+from pickmeup.gtfs import GTFSFeed, inspect_feed, plot_network
+
+feed = GTFSFeed.from_zip("data/raw/rapid-rail-kl.zip")
+feed.summary()
+feed.route_patterns()
+inspect_feed(feed).to_frame()
+plot_network(feed)
+```
+
+The 2024 assumptions and the inspected 2026 feed snapshot are compared in [`docs/gtfs_2024_to_2026.md`](docs/gtfs_2024_to_2026.md).
+
+## Repository guide
+
+- `src/pickmeup/gtfs/` — current GTFS sourcing, parsing, inspection, and plotting code.
+- `tests/` — focused tests for objective parsing and relationship behaviour.
+- `notebooks/original_exploration.ipynb` — the preserved 2024 prototype.
+- `notebooks/legacy/interchanges.pickle` — the original interchange DataFrame retained as evidence.
+- `_interchanges_csv_for_inspection_only.csv` — a readable export of that legacy data.
+- `data/curated/interchange_candidate_dispositions.json` — reviewed interchange decisions that later experiments can consume.
+- `docs/interchange_candidate_validation.md` — notes on how those candidate decisions were investigated.
+
+## API key
+
+OpenRouteService is not needed for GTFS parsing. Later road-routing experiments will use the `OPENROUTESERVICE` environment variable shown in `.env.example`.
+
+Do not commit real credentials.
