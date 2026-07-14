@@ -5,10 +5,11 @@ build-backend = "setuptools.build_meta"
 [project]
 name = "pickmeup"
 version = "0.0.0"
-description = "Experimental transit meeting-point journey planner"
+description = "Kuala Lumpur transport and meeting-point experiments"
 readme = "README.md"
 requires-python = ">=3.12"
 dependencies = [
+    "matplotlib>=3.8,<4",
     "networkx>=3.2,<4",
     "numpy>=1.26,<3",
     "pandas>=2.1,<3",
