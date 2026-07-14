@@ -4,6 +4,9 @@ on:
   push:
     branches:
       - agent/gtfs-data-workbench
+  pull_request:
+    branches:
+      - main
 
 jobs:
   validate-live-feed:
