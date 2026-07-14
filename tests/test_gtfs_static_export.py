@@ -77,3 +77,24 @@ def test_immutable_snapshot_files_are_deterministic(
     first_manifest.pop("acquired_at")
     second_manifest.pop("acquired_at")
     assert first_manifest == second_manifest
+
+
+def test_reexporting_same_snapshot_preserves_acquisition_time(
+    sample_gtfs_zip: Path, tmp_path: Path
+) -> None:
+    feed = GTFSFeed.from_zip(sample_gtfs_zip)
+    site_root = tmp_path / "docs"
+
+    first = export_static_snapshot(
+        feed,
+        site_root,
+        acquired_at="2026-07-15T08:00:00+08:00",
+    )
+    second = export_static_snapshot(
+        feed,
+        site_root,
+        acquired_at="2026-07-16T08:00:00+08:00",
+    )
+
+    assert first == second
+    assert second["acquired_at"] == "2026-07-15T08:00:00+08:00"
