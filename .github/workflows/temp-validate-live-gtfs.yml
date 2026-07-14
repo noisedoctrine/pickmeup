@@ -1,0 +1,27 @@
+name: Temporary live GTFS validation
+
+on:
+  push:
+    branches:
+      - agent/gtfs-data-workbench
+  pull_request:
+    branches:
+      - main
+
+jobs:
+  validate-live-feed:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - run: python -m pip install -e ".[dev]"
+      - run: pytest -q
+      - run: ruff check src tests
+      - run: mypy --ignore-missing-imports src/pickmeup
+      - run: python -m pickmeup.gtfs download /tmp/rapid-rail-kl.zip
+      - run: python -m pickmeup.gtfs quality /tmp/rapid-rail-kl.zip
+      - run: python -m pickmeup.gtfs curated /tmp/rapid-rail-kl.zip data/curated/interchange_candidate_dispositions.json
+      - run: python -m pickmeup.gtfs plot /tmp/rapid-rail-kl.zip /tmp/rapid-rail-kl.png
