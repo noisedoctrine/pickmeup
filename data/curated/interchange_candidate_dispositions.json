@@ -1,0 +1,203 @@
+{
+  "schema_version": 1,
+  "city_id": "kuala_lumpur",
+  "checked_on": "2026-07-15",
+  "description": "OSINT-reviewed interchange candidate dispositions recovered from the 2024 prototype. Runtime code should filter using runtime_use rather than infer approval from proximity.",
+  "allowed_values": {
+    "disposition": [
+      "accepted",
+      "rejected"
+    ],
+    "runtime_use": [
+      "transfer_edge",
+      "optional_out_of_station_edge",
+      "exclude"
+    ],
+    "classification": [
+      "official_integrated_transfer",
+      "official_connecting_transfer",
+      "out_of_station_transfer",
+      "proximity_false_positive",
+      "street_walk_only"
+    ],
+    "confidence": [
+      "high",
+      "medium",
+      "low"
+    ]
+  },
+  "records": [
+    {
+      "id": "kl-plaza-rakyat-merdeka",
+      "from_stop_ids": [
+        "AG8",
+        "SP8"
+      ],
+      "to_stop_ids": [
+        "KG17"
+      ],
+      "bidirectional": true,
+      "disposition": "accepted",
+      "runtime_use": "transfer_edge",
+      "classification": "official_integrated_transfer",
+      "confidence": "high",
+      "fare_integration": "paid_to_paid",
+      "covered": true,
+      "legacy_metrics": {
+        "haversine_distance_m": 231.0,
+        "walking_distance_m": 151.6,
+        "walking_duration_s": 109.2
+      },
+      "osint_summary": "Plaza Rakyat and Merdeka are an official integrated interchange connected by an approximately 180 m covered, air-conditioned, paid-to-paid walkway. The legacy routed distance being shorter than the stop-coordinate haversine distance indicates mismatched reference points, not an invalid transfer.",
+      "sources": [
+        {
+          "source_kind": "crowd_edited_reference",
+          "title": "Plaza Rakyat LRT station",
+          "url": "https://en.wikipedia.org/wiki/Plaza_Rakyat_LRT_station"
+        },
+        {
+          "source_kind": "crowd_edited_reference",
+          "title": "Merdeka MRT station",
+          "url": "https://en.wikipedia.org/wiki/Merdeka_MRT_station"
+        }
+      ]
+    },
+    {
+      "id": "kl-sentral-lrt-muzium-negara",
+      "from_stop_ids": [
+        "KJ15"
+      ],
+      "to_stop_ids": [
+        "KG15"
+      ],
+      "bidirectional": true,
+      "disposition": "accepted",
+      "runtime_use": "transfer_edge",
+      "classification": "official_connecting_transfer",
+      "confidence": "high",
+      "fare_integration": "separate_gate_or_unknown",
+      "covered": true,
+      "legacy_metrics": {
+        "haversine_distance_m": 344.0,
+        "walking_distance_m": 666.5,
+        "walking_duration_s": 479.9
+      },
+      "osint_summary": "Muzium Negara is officially connected to the KL Sentral complex by an approximately 240 m covered pedestrian link. The legacy street-routing distance likely missed the internal link and should not be treated as authoritative.",
+      "sources": [
+        {
+          "source_kind": "crowd_edited_reference",
+          "title": "Muzium Negara MRT station",
+          "url": "https://en.wikipedia.org/wiki/Muzium_Negara_MRT_station"
+        }
+      ]
+    },
+    {
+      "id": "kl-muzium-negara-kl-sentral-monorail",
+      "from_stop_ids": [
+        "KG15"
+      ],
+      "to_stop_ids": [
+        "MR1"
+      ],
+      "bidirectional": true,
+      "disposition": "accepted",
+      "runtime_use": "optional_out_of_station_edge",
+      "classification": "out_of_station_transfer",
+      "confidence": "high",
+      "fare_integration": "separate_fares",
+      "covered": true,
+      "legacy_metrics": {
+        "haversine_distance_m": 499.0,
+        "walking_distance_m": 1000.4,
+        "walking_duration_s": 720.3
+      },
+      "osint_summary": "The connection is physically usable through the Muzium Negara link, KL Sentral and NU Sentral, but it is long and not a paid-area interchange. Runtime routing should only include it when out-of-station transfers are enabled and should apply a substantial transfer penalty.",
+      "sources": [
+        {
+          "source_kind": "crowd_edited_reference",
+          "title": "Muzium Negara MRT station",
+          "url": "https://en.wikipedia.org/wiki/Muzium_Negara_MRT_station"
+        },
+        {
+          "source_kind": "crowd_edited_reference",
+          "title": "Kuala Lumpur Sentral station",
+          "url": "https://en.wikipedia.org/wiki/Kuala_Lumpur_Sentral_station"
+        },
+        {
+          "source_kind": "crowd_edited_reference",
+          "title": "KL Monorail",
+          "url": "https://en.wikipedia.org/wiki/KL_Monorail"
+        }
+      ]
+    },
+    {
+      "id": "kl-sentul-titiwangsa-mrt",
+      "from_stop_ids": [
+        "AG2",
+        "SP2"
+      ],
+      "to_stop_ids": [
+        "PY17"
+      ],
+      "bidirectional": true,
+      "disposition": "rejected",
+      "runtime_use": "exclude",
+      "classification": "proximity_false_positive",
+      "confidence": "high",
+      "fare_integration": "not_applicable",
+      "covered": false,
+      "legacy_metrics": {
+        "haversine_distance_m": 491.0,
+        "walking_distance_m": 876.4,
+        "walking_duration_s": 631.0
+      },
+      "osint_summary": "Sentul LRT is not the Titiwangsa interchange. Titiwangsa already integrates AG3/SP3, MR11 and PY17. A passenger should remain on the LRT for one more stop instead of exiting at Sentul and walking nearly a kilometre.",
+      "sources": [
+        {
+          "source_kind": "crowd_edited_reference",
+          "title": "Sentul LRT station",
+          "url": "https://en.wikipedia.org/wiki/Sentul_LRT_station"
+        },
+        {
+          "source_kind": "crowd_edited_reference",
+          "title": "Titiwangsa station",
+          "url": "https://en.wikipedia.org/wiki/Titiwangsa_station"
+        }
+      ]
+    },
+    {
+      "id": "kl-merdeka-maharajalela",
+      "from_stop_ids": [
+        "KG17"
+      ],
+      "to_stop_ids": [
+        "MR3"
+      ],
+      "bidirectional": true,
+      "disposition": "rejected",
+      "runtime_use": "exclude",
+      "classification": "street_walk_only",
+      "confidence": "medium",
+      "fare_integration": "none",
+      "covered": false,
+      "legacy_metrics": {
+        "haversine_distance_m": 473.0,
+        "walking_distance_m": 923.9,
+        "walking_duration_s": 665.2
+      },
+      "osint_summary": "The stations serve different sides of the Merdeka/Stadium precinct and are not documented as an interchange. The former Maharajalela station name 'Merdeka' can create a misleading name match. Keep this only in a general pedestrian network, not the curated transit-transfer graph.",
+      "sources": [
+        {
+          "source_kind": "crowd_edited_reference",
+          "title": "Maharajalela station",
+          "url": "https://en.wikipedia.org/wiki/Maharajalela_station"
+        },
+        {
+          "source_kind": "crowd_edited_reference",
+          "title": "Merdeka MRT station",
+          "url": "https://en.wikipedia.org/wiki/Merdeka_MRT_station"
+        }
+      ]
+    }
+  ]
+}
