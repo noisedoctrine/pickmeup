@@ -16,6 +16,12 @@ data/*
 # Keep the small interchange inspection CSV tracked for validation
 !_interchanges_csv_for_inspection_only.csv
 
+# Ignore local Python environments and build outputs
+.venv/
+build/
+dist/
+*.egg-info/
+
 # Ignore environment files, API keys, secrets
 .env
 config/secrets.json
