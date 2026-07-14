@@ -146,7 +146,7 @@ def _stop_geojson(feed: GTFSFeed) -> dict[str, object]:
                 },
                 "geometry": {
                     "type": "Point",
-                    "coordinates": [float(longitude), float(latitude)],
+                    "coordinates": [float(str(longitude)), float(str(latitude))],
                 },
             }
         )
