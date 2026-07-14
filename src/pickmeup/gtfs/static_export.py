@@ -24,11 +24,12 @@ def export_static_snapshot(
 
     The snapshot directory is derived from the complete GTFS ZIP checksum. The
     immutable files contain only feed-derived data, so exporting the same feed
-    produces the same bytes. Acquisition time belongs in the small mutable
-    manifest and can therefore change without invalidating the snapshot cache.
+    produces the same bytes. When an existing manifest already points at the same
+    checksum, its acquisition time is retained so a no-op refresh creates no diff.
     """
 
     root = Path(site_root)
+    manifest_path = root / "data" / "manifest.json"
     snapshot_id = feed.provenance.sha256[:12]
     snapshot_root = root / "data" / "snapshots" / snapshot_id
     snapshot_root.mkdir(parents=True, exist_ok=True)
@@ -57,10 +58,15 @@ def export_static_snapshot(
     for key, filename in filenames.items():
         _write_json(snapshot_root / filename, payloads[key])
 
+    effective_acquired_at = (
+        _existing_acquired_at(manifest_path, feed.provenance.sha256)
+        or acquired_at
+        or feed.provenance.loaded_at
+    )
     manifest: dict[str, object] = {
         "schema_version": SNAPSHOT_SCHEMA_VERSION,
         "active_snapshot": snapshot_id,
-        "acquired_at": acquired_at or feed.provenance.loaded_at,
+        "acquired_at": effective_acquired_at,
         "sha256": feed.provenance.sha256,
         "source_url": feed.provenance.source_url,
         "files": {
@@ -68,7 +74,7 @@ def export_static_snapshot(
             for key, filename in filenames.items()
         },
     }
-    _write_json(root / "data" / "manifest.json", manifest)
+    _write_json(manifest_path, manifest)
     return manifest
 
 
@@ -271,6 +277,17 @@ def _clean(value: Any) -> object:
     if hasattr(value, "item"):
         return value.item()
     return value
+
+
+def _existing_acquired_at(path: Path, sha256: str) -> str | None:
+    try:
+        current = json.loads(path.read_text(encoding="utf-8"))
+    except (OSError, json.JSONDecodeError):
+        return None
+    acquired_at = current.get("acquired_at")
+    if current.get("sha256") == sha256 and isinstance(acquired_at, str):
+        return acquired_at
+    return None
 
 
 def _write_json(path: Path, payload: object) -> None:
