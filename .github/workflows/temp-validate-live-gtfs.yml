@@ -18,10 +18,13 @@ jobs:
         with:
           python-version: "3.12"
       - run: python -m pip install -e .
-      - name: Download and inspect current Rapid KL rail feed
-        run: |
-          python -m pickmeup.gtfs download /tmp/rapid-rail-kl.zip
-          python -m pickmeup.gtfs summary /tmp/rapid-rail-kl.zip
-          python -m pickmeup.gtfs quality /tmp/rapid-rail-kl.zip
-          python -m pickmeup.gtfs curated /tmp/rapid-rail-kl.zip data/curated/interchange_candidate_dispositions.json
-          python -m pickmeup.gtfs plot /tmp/rapid-rail-kl.zip /tmp/rapid-rail-kl.png
+      - name: Download current Rapid KL rail feed
+        run: python -m pickmeup.gtfs download /tmp/rapid-rail-kl.zip
+      - name: Summarize current feed
+        run: python -m pickmeup.gtfs summary /tmp/rapid-rail-kl.zip
+      - name: Inspect current feed quality
+        run: python -m pickmeup.gtfs quality /tmp/rapid-rail-kl.zip
+      - name: Check curated stop IDs
+        run: python -m pickmeup.gtfs curated /tmp/rapid-rail-kl.zip data/curated/interchange_candidate_dispositions.json
+      - name: Plot current feed
+        run: python -m pickmeup.gtfs plot /tmp/rapid-rail-kl.zip /tmp/rapid-rail-kl.png
