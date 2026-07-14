@@ -4,6 +4,9 @@ on:
   push:
     branches:
       - agent/static-gtfs-explorer
+  pull_request:
+    branches:
+      - main
 
 jobs:
   validate:
