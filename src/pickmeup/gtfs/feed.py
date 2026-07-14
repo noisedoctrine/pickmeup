@@ -63,7 +63,7 @@ class GTFSFeed:
 
     @classmethod
     def from_zip(cls, path: str | Path, *, source_url: str | None = None) -> "GTFSFeed":
-        """Load every ``.txt`` table from a GTFS ZIP file."""
+        """Load every real ``.txt`` table from a GTFS ZIP file."""
 
         zip_path = Path(path)
         try:
@@ -78,7 +78,11 @@ class GTFSFeed:
         try:
             with zipfile.ZipFile(zip_path) as archive:
                 members = sorted(
-                    name for name in archive.namelist() if not name.endswith("/") and name.lower().endswith(".txt")
+                    name
+                    for name in archive.namelist()
+                    if not name.endswith("/")
+                    and name.lower().endswith(".txt")
+                    and not _is_archive_metadata(name)
                 )
                 if not members:
                     raise GTFSLoadError(f"GTFS ZIP {zip_path} contains no .txt tables")
@@ -317,6 +321,13 @@ def _parse_optional_time(value: object) -> int | pd.NA:
         return parse_gtfs_time(text)
     except ValueError:
         return pd.NA
+
+
+def _is_archive_metadata(member: str) -> bool:
+    """Return whether a ZIP member is packaging debris rather than a GTFS table."""
+
+    path = Path(member)
+    return "__MACOSX" in path.parts or path.name.startswith("._") or path.name.startswith(".")
 
 
 def concatenated_values(frames: Iterable[pd.Series]) -> pd.Series:
