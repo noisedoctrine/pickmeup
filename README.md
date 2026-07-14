@@ -35,4 +35,33 @@ This intended behavior is not yet available as a stable package or command-line 
 
 ## Development
 
-The package and reproducible development environment will be introduced in follow-up work. Importing `pickmeup` currently performs no network calls or notebook execution.
+PickMeUp requires Python 3.12 or newer.
+
+Create a virtual environment and install the package from the repository root:
+
+```bash
+python -m venv .venv
+source .venv/bin/activate
+python -m pip install -e .
+python -c "import pickmeup"
+```
+
+On Windows, activate the environment with `.venv\Scripts\activate`.
+
+Install the development tools used for tests, formatting, linting, and type checking with:
+
+```bash
+python -m pip install -e ".[dev]"
+```
+
+Runtime and development dependency ranges are declared in `pyproject.toml`.
+
+## Environment variables
+
+Copy the example file when live OpenRouteService access is needed:
+
+```bash
+cp .env.example .env
+```
+
+Set `OPENROUTESERVICE` in `.env` to your API key. Do not commit `.env` or any real credentials. Importing `pickmeup` does not require the key and does not make network calls.
