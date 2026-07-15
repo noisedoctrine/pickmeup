@@ -22,6 +22,8 @@
     <script defer src="map-config.js"></script>
     <script defer src="app.js"></script>
     <script defer src="map-features.js"></script>
+    <script defer src="station-model.js"></script>
+    <script defer src="map-refinements.js"></script>
   </head>
   <body>
     <header class="topbar">
@@ -42,6 +44,51 @@
           <button class="secondary-button" id="show-all-routes" type="button">
             Show the whole network
           </button>
+        </section>
+
+        <section class="map-experiments" aria-labelledby="experiments-heading">
+          <div class="section-heading">
+            <h2 id="experiments-heading">Map experiments</h2>
+            <span class="muted">try these</span>
+          </div>
+          <label class="experiment-field">
+            Station names
+            <select id="station-label-mode">
+              <option
+                value="balanced"
+                data-note="Balanced keeps names collision-aware and waits until close zoom."
+              >
+                Balanced
+              </option>
+              <option
+                value="hover"
+                data-note="Hover only keeps persistent names hidden and relies on station tooltips."
+              >
+                Hover only
+              </option>
+              <option
+                value="dense"
+                data-note="Dense reveals names earlier so label density can be compared."
+              >
+                Dense
+              </option>
+            </select>
+          </label>
+          <label class="experiment-field">
+            Shared-track markers
+            <select id="shared-track-mode">
+              <option value="boundaries">Boundaries</option>
+              <option value="all">All multi-line stops</option>
+              <option value="none">None</option>
+            </select>
+          </label>
+          <label class="experiment-check">
+            <input id="show-walk-links" type="checkbox" checked />
+            Show curated walk links
+          </label>
+          <p class="experiment-note" id="map-experiment-note">
+            Balanced keeps names collision-aware and waits until close zoom.
+          </p>
         </section>
 
         <section aria-labelledby="summary-heading">
