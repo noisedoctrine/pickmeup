@@ -79,7 +79,7 @@ PickMeUp requires Python 3.12 or newer.
 ```bash
 python -m venv .venv
 source .venv/bin/activate
-python -m pip install -e "[dev]"
+python -m pip install -e ".[dev]"
 ```
 
 On Windows, activate the environment with `.venv\Scripts\activate`.
