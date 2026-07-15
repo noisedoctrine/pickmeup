@@ -1,0 +1,37 @@
+{
+  "schema_version": 1,
+  "source_path": "data/curated/interchange_candidate_dispositions.json",
+  "checked_on": "2026-07-15",
+  "records": [
+    {
+      "id": "kl-plaza-rakyat-merdeka",
+      "from_stop_ids": ["AG8", "SP8"],
+      "to_stop_ids": ["KG17"],
+      "disposition": "accepted",
+      "runtime_use": "transfer_edge",
+      "classification": "official_integrated_transfer",
+      "covered": true,
+      "description": "Official covered paid-area connection between Plaza Rakyat and Merdeka."
+    },
+    {
+      "id": "kl-sentral-lrt-muzium-negara",
+      "from_stop_ids": ["KJ15"],
+      "to_stop_ids": ["KG15"],
+      "disposition": "accepted",
+      "runtime_use": "transfer_edge",
+      "classification": "official_connecting_transfer",
+      "covered": true,
+      "description": "Official covered pedestrian connection between KL Sentral and Muzium Negara."
+    },
+    {
+      "id": "kl-muzium-negara-kl-sentral-monorail",
+      "from_stop_ids": ["KG15"],
+      "to_stop_ids": ["MR1"],
+      "disposition": "accepted",
+      "runtime_use": "optional_out_of_station_edge",
+      "classification": "out_of_station_transfer",
+      "covered": true,
+      "description": "Longer out-of-station connection through the KL Sentral and NU Sentral complex."
+    }
+  ]
+}

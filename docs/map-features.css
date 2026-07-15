@@ -1,0 +1,61 @@
+.station-popup {
+  display: grid;
+  gap: 0.45rem;
+  min-width: 13rem;
+  max-width: 20rem;
+  color: #1c2522;
+}
+
+.station-popup > strong {
+  font-size: 0.95rem;
+  line-height: 1.2;
+}
+
+.station-popup p {
+  margin: 0;
+  line-height: 1.35;
+}
+
+.popup-code {
+  color: #5f6b67;
+  font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+  font-size: 0.78rem;
+}
+
+.route-chip-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.3rem;
+}
+
+.route-chip {
+  border: 1px solid rgba(28, 37, 34, 0.32);
+  border-radius: 999px;
+  font-size: 0.7rem;
+  font-weight: 750;
+  line-height: 1;
+  padding: 0.3rem 0.48rem;
+}
+
+.connection-list {
+  display: grid;
+  gap: 0.55rem;
+  margin: 0.15rem 0 0;
+  padding-left: 1rem;
+}
+
+.connection-list li > div {
+  display: grid;
+  gap: 0.12rem;
+}
+
+.connection-list strong,
+.connection-list span {
+  display: block;
+}
+
+.connection-list span {
+  color: #4c5854;
+  font-size: 0.76rem;
+  line-height: 1.3;
+}
