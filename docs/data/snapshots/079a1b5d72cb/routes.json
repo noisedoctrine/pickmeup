@@ -1,0 +1,84 @@
+{
+  "routes": [
+    {
+      "color": "e57200",
+      "long_name": "LRT Ampang Line",
+      "pattern_count": 2,
+      "route_id": "AG",
+      "route_type": "1",
+      "short_name": "AGL",
+      "station_count": 18,
+      "text_color": "ffffff"
+    },
+    {
+      "color": "115740",
+      "long_name": "BRT Sunway Line",
+      "pattern_count": 2,
+      "route_id": "BRT",
+      "route_type": "0",
+      "short_name": "BRT",
+      "station_count": 7,
+      "text_color": "ffffff"
+    },
+    {
+      "color": "047940",
+      "long_name": "MRT Kajang Line",
+      "pattern_count": 2,
+      "route_id": "KGL",
+      "route_type": "1",
+      "short_name": "KGL",
+      "station_count": 29,
+      "text_color": "ffffff"
+    },
+    {
+      "color": "d50032",
+      "long_name": "LRT Kelana Jaya Line",
+      "pattern_count": 2,
+      "route_id": "KJ",
+      "route_type": "1",
+      "short_name": "KJL",
+      "station_count": 37,
+      "text_color": "ffffff"
+    },
+    {
+      "color": "84bd00",
+      "long_name": "KL Monorail Line",
+      "pattern_count": 2,
+      "route_id": "MR",
+      "route_type": "1",
+      "short_name": "MRL",
+      "station_count": 11,
+      "text_color": "ffffff"
+    },
+    {
+      "color": "76232f",
+      "long_name": "LRT Sri Petaling Line",
+      "pattern_count": 2,
+      "route_id": "PH",
+      "route_type": "1",
+      "short_name": "SPL",
+      "station_count": 29,
+      "text_color": "ffffff"
+    },
+    {
+      "color": "ffcd00",
+      "long_name": "MRT Putrajaya Line",
+      "pattern_count": 2,
+      "route_id": "PYL",
+      "route_type": "1",
+      "short_name": "PYL",
+      "station_count": 36,
+      "text_color": "ffffff"
+    },
+    {
+      "color": "ff00ff",
+      "long_name": "LRT Shah Alam Line",
+      "pattern_count": 2,
+      "route_id": "SA",
+      "route_type": "1",
+      "short_name": "SAL",
+      "station_count": 20,
+      "text_color": "ffffff"
+    }
+  ]
+}

@@ -1,0 +1,16 @@
+{
+  "acquired_at": "2026-07-14T22:33:37.747343+00:00",
+  "active_snapshot": "079a1b5d72cb",
+  "files": {
+    "frequencies": "snapshots/079a1b5d72cb/frequencies.json",
+    "patterns": "snapshots/079a1b5d72cb/patterns.json",
+    "quality": "snapshots/079a1b5d72cb/quality.json",
+    "routes": "snapshots/079a1b5d72cb/routes.json",
+    "shapes": "snapshots/079a1b5d72cb/shapes.geojson",
+    "stops": "snapshots/079a1b5d72cb/stops.geojson",
+    "summary": "snapshots/079a1b5d72cb/summary.json"
+  },
+  "schema_version": 1,
+  "sha256": "079a1b5d72cbecd923a7271468c45572d36b60d2947acb497f440d1bd4888467",
+  "source_url": "https://api.data.gov.my/gtfs-static/prasarana?category=rapid-rail-kl"
+}

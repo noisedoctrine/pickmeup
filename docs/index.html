@@ -1,0 +1,106 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta
+      name="description"
+      content="An interactive browser explorer for a cached Kuala Lumpur Rapid KL GTFS snapshot."
+    />
+    <title>PickMeUp · KL rail explorer</title>
+    <link rel="preconnect" href="https://unpkg.com" />
+    <link rel="preconnect" href="https://cdn.jsdelivr.net" />
+    <link
+      href="https://unpkg.com/maplibre-gl@5.24.0/dist/maplibre-gl.css"
+      rel="stylesheet"
+    />
+    <link href="styles.css" rel="stylesheet" />
+    <script defer src="https://unpkg.com/maplibre-gl@5.24.0/dist/maplibre-gl.js"></script>
+    <script defer src="https://cdn.jsdelivr.net/npm/chart.js@4.5.1/dist/chart.umd.min.js"></script>
+    <script defer src="app.js"></script>
+  </head>
+  <body>
+    <header class="topbar">
+      <div>
+        <p class="eyebrow">Kuala Lumpur transport playground</p>
+        <h1>PickMeUp rail explorer</h1>
+      </div>
+      <div class="snapshot-chip" id="snapshot-chip">Loading cached snapshot…</div>
+    </header>
+
+    <main class="app-shell">
+      <aside class="sidebar" aria-label="Feed and route explorer">
+        <section class="intro-card">
+          <p>
+            This page explores a processed Rapid KL rail snapshot committed with the
+            repository. It does not download the live GTFS feed when you visit.
+          </p>
+          <button class="secondary-button" id="show-all-routes" type="button">
+            Show the whole network
+          </button>
+        </section>
+
+        <section aria-labelledby="summary-heading">
+          <div class="section-heading">
+            <h2 id="summary-heading">Snapshot</h2>
+            <span id="snapshot-id" class="mono muted"></span>
+          </div>
+          <div class="metric-grid" id="metric-grid"></div>
+          <dl class="provenance" id="provenance"></dl>
+        </section>
+
+        <section aria-labelledby="routes-heading">
+          <div class="section-heading">
+            <h2 id="routes-heading">Routes</h2>
+            <span class="muted">select one</span>
+          </div>
+          <div class="route-list" id="route-list"></div>
+        </section>
+
+        <section aria-labelledby="details-heading">
+          <div class="section-heading">
+            <h2 id="details-heading">Route details</h2>
+          </div>
+          <div id="route-details" class="empty-state">
+            Choose a route to inspect its patterns, stations, and frequency windows.
+          </div>
+        </section>
+
+        <section aria-labelledby="charts-heading">
+          <div class="section-heading">
+            <h2 id="charts-heading">At a glance</h2>
+          </div>
+          <div class="chart-card">
+            <h3>Stations by route</h3>
+            <canvas id="route-chart" aria-label="Station counts by route"></canvas>
+          </div>
+          <div class="chart-card">
+            <h3>Quality findings</h3>
+            <canvas id="quality-chart" aria-label="Quality findings by severity"></canvas>
+          </div>
+        </section>
+
+        <section aria-labelledby="quality-heading">
+          <div class="section-heading">
+            <h2 id="quality-heading">Feed notes</h2>
+          </div>
+          <div id="quality-list"></div>
+        </section>
+      </aside>
+
+      <section class="map-panel" aria-label="Interactive rail map">
+        <div id="map"></div>
+        <div class="map-status" id="map-status">Preparing map…</div>
+      </section>
+    </main>
+
+    <template id="metric-template">
+      <article class="metric-card">
+        <strong></strong>
+        <span></span>
+      </article>
+    </template>
+
+    <noscript>This explorer requires JavaScript.</noscript>
+  </body>
+</html>

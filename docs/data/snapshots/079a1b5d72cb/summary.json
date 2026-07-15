@@ -1,0 +1,59 @@
+{
+  "has_frequencies": true,
+  "has_parent_stations": false,
+  "has_shapes": true,
+  "has_transfers": false,
+  "route_count": 8,
+  "route_pattern_count": 16,
+  "service_time_bounds": [
+    {
+      "column": "arrival_time",
+      "invalid_values": 0,
+      "maximum_seconds": 27491,
+      "minimum_seconds": 21600,
+      "table": "stop_times",
+      "valid_values": 1122,
+      "values_at_or_after_24h": 0
+    },
+    {
+      "column": "departure_time",
+      "invalid_values": 0,
+      "maximum_seconds": 27506,
+      "minimum_seconds": 21618,
+      "table": "stop_times",
+      "valid_values": 1122,
+      "values_at_or_after_24h": 0
+    },
+    {
+      "column": "start_time",
+      "invalid_values": 0,
+      "maximum_seconds": 79200,
+      "minimum_seconds": 21600,
+      "table": "frequencies",
+      "valid_values": 106,
+      "values_at_or_after_24h": 0
+    },
+    {
+      "column": "end_time",
+      "invalid_values": 0,
+      "maximum_seconds": 86400,
+      "minimum_seconds": 25200,
+      "table": "frequencies",
+      "valid_values": 106,
+      "values_at_or_after_24h": 18
+    }
+  ],
+  "sha256": "079a1b5d72cbecd923a7271468c45572d36b60d2947acb497f440d1bd4888467",
+  "stop_count": 187,
+  "tables": {
+    "agency": 1,
+    "calendar": 8,
+    "frequencies": 106,
+    "routes": 8,
+    "shapes": 7280,
+    "stop_times": 1122,
+    "stops": 187,
+    "trips": 48
+  },
+  "trip_count": 48
+}
