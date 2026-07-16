@@ -1,0 +1,10 @@
+.map-style-lab-fields {
+  display: grid;
+  gap: 0.8rem;
+  padding-top: 0.8rem;
+  border-top: 1px solid rgba(28, 37, 34, 0.12);
+}
+
+.map-style-lab-fields select {
+  cursor: pointer;
+}
