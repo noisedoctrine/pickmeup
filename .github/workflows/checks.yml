@@ -46,11 +46,19 @@ jobs:
           python -m ruff check src tests
           python -m mypy --ignore-missing-imports src/pickmeup
 
-      - name: Check JavaScript and run browser-data tests
+      - name: Check JavaScript syntax
         run: |
           find docs tests -type f -name '*.js' -print0 \
             | sort -z \
             | xargs -0 -n1 node --check
-          find tests -type f -name '*.test.js' -print0 \
-            | sort -z \
-            | xargs -0 -n1 node
+
+      - name: Run JavaScript unit tests
+        run: |
+          set -euo pipefail
+          while IFS= read -r test_file; do
+            echo "Running ${test_file}"
+            node "${test_file}"
+          done < <(find tests -type f -name '*.test.js' ! -name 'pages_snapshot.test.js' | sort)
+
+      - name: Run cached Pages snapshot integration test
+        run: node tests/pages_snapshot.test.js
