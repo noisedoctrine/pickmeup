@@ -127,6 +127,11 @@ assert.equal(estimate.total_waiting_seconds, 90);
 assert.equal(estimate.missing_travel_times, 4);
 assert.equal(estimate.unavailable_boardings, 1);
 
+assert.equal(
+  estimateRoutingPath(path, schedule, { mode: "time-aware", date: "2026-07-17", seconds: null }),
+  null,
+);
+
 const legacy = estimateRoutingPath(
   { edges: path.edges.slice(0, 2) },
   schedule,
