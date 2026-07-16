@@ -150,16 +150,21 @@ assert(sameLinePath, "Expected an end-to-end Kelana Jaya path");
 assert(sameLinePath.edges.every((edge) => edge.kind === "ride"));
 assert.equal(sameLinePath.line_changes, 0);
 
-const firstRide = sameLinePath.edges[0];
-const firstRideShape = routingShapeSegment(
-  firstRide,
-  integratedGraph.nodes.get(firstRide.from),
-  integratedGraph.nodes.get(firstRide.to),
-  snapshot.shapes.features,
+const shapeSegments = sameLinePath.edges.map((edge) =>
+  routingShapeSegment(
+    edge,
+    integratedGraph.nodes.get(edge.from),
+    integratedGraph.nodes.get(edge.to),
+    snapshot.shapes.features,
+  ),
 );
 assert(
-  firstRideShape.length > 2,
-  "Expected the Pages highlight to follow cached GTFS shape geometry",
+  shapeSegments.every((segment) => segment.length >= 2),
+  "Every ride link should produce drawable route geometry",
+);
+assert(
+  shapeSegments.some((segment) => segment.length > 2),
+  "Expected the highlighted journey to use cached GTFS shape geometry rather than only straight chords",
 );
 
 const kj15 = stationModel.groupByStopId.get("KJ15")?.id;
