@@ -1,6 +1,8 @@
 "use strict";
 
 const assert = require("node:assert/strict");
+const fs = require("node:fs");
+const nodePath = require("node:path");
 const {
   HeadwaySchedule,
   addCalendarDays,
@@ -94,6 +96,16 @@ const frequencies = [
 ];
 
 const schedule = new HeadwaySchedule(frequencies);
+
+const indexHtml = fs.readFileSync(
+  nodePath.resolve(__dirname, "../docs/index.html"),
+  "utf8",
+);
+const routingLabPosition = indexHtml.indexOf('src="routing-lab-ui.js"');
+const routingCostsPosition = indexHtml.indexOf('src="routing-costs.js"');
+assert(routingLabPosition >= 0, "Route lab UI script must be loaded");
+assert(routingCostsPosition > routingLabPosition, "Routing costs must load after the route lab UI");
+assert.match(indexHtml, /href="routing-costs\.css"/);
 
 assert.equal(serviceIdForDate("2026-07-17"), "MonFri");
 assert.equal(serviceIdForDate("2026-07-18"), "Sat");
