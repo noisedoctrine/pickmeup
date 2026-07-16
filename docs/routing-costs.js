@@ -166,6 +166,7 @@ function estimateRoutingPath(path, schedule, options = {}) {
   if (!path || !schedule || !startDate || !Number.isFinite(startSeconds)) return null;
 
   let clock = { date: startDate, seconds: startSeconds };
+  let clockReliable = true;
   let currentRoute = null;
   let totalWaitingSeconds = 0;
   let knownTravelSeconds = 0;
@@ -177,11 +178,19 @@ function estimateRoutingPath(path, schedule, options = {}) {
     if (edge.kind === "ride") {
       const routeId = String(edge.route_id || "");
       if (routeId !== currentRoute) {
+        const evaluationClock = clockReliable
+          ? clock
+          : { date: startDate, seconds: startSeconds };
         let waitSeconds = 0;
         let window = null;
         let available = mode === "none";
         if (mode === "time-aware") {
-          window = schedule.activeWindow(routeId, edge.direction_id, clock.date, clock.seconds);
+          window = schedule.activeWindow(
+            routeId,
+            edge.direction_id,
+            evaluationClock.date,
+            evaluationClock.seconds,
+          );
           available = Boolean(window);
           if (!window) unavailableBoardings += 1;
           else waitSeconds = window.expected_wait_seconds;
@@ -195,8 +204,9 @@ function estimateRoutingPath(path, schedule, options = {}) {
         boardings.push({
           route_id: routeId,
           direction_id: edge.direction_id ?? null,
-          boarding_date: clock.date,
-          boarding_seconds: clock.seconds,
+          boarding_date: evaluationClock.date,
+          boarding_seconds: evaluationClock.seconds,
+          clock_basis: clockReliable ? "progressed" : "selected",
           headway_seconds: window?.headway_secs ?? null,
           wait_seconds: waitSeconds,
           service_id: window?.service_id ?? null,
@@ -219,6 +229,7 @@ function estimateRoutingPath(path, schedule, options = {}) {
       clock = advanceClock(clock.date, clock.seconds, travelSeconds);
     } else {
       missingTravelTimes += 1;
+      clockReliable = false;
     }
   }
 
@@ -351,9 +362,13 @@ function installRoutingCostControls() {
   });
 }
 
+function routingFrequencyDataLoaded(appState) {
+  return Boolean(appState?.manifest && Array.isArray(appState.frequencies));
+}
+
 function waitForRoutingCostData(attempt = 0) {
   if (attempt > 250) return;
-  if (typeof state === "undefined" || !Array.isArray(state.frequencies)) {
+  if (typeof state === "undefined" || !routingFrequencyDataLoaded(state)) {
     window.setTimeout(() => waitForRoutingCostData(attempt + 1), 60);
     return;
   }
@@ -420,7 +435,9 @@ function renderRoutingCostResult() {
     heading.textContent = `${name}${direction}`;
     const detail = document.createElement("span");
     if (routingCostState.mode === "time-aware" && boarding.available) {
-      detail.textContent = `${formatClockSeconds(boarding.boarding_seconds)} boarding · ${formatDuration(boarding.headway_seconds)} headway · ${formatDuration(boarding.wait_seconds)} expected wait`;
+      const clockLabel =
+        boarding.clock_basis === "selected" ? "selected clock" : "estimated boarding";
+      detail.textContent = `${formatClockSeconds(boarding.boarding_seconds)} ${clockLabel} · ${formatDuration(boarding.headway_seconds)} headway · ${formatDuration(boarding.wait_seconds)} expected wait`;
     } else if (routingCostState.mode === "legacy" && boarding.available) {
       detail.textContent = `${formatDuration(boarding.wait_seconds)} weekly-average expected wait`;
     } else if (routingCostState.mode === "none") {
@@ -437,7 +454,7 @@ function renderRoutingCostResult() {
   if (estimate.missing_travel_times) {
     const note = document.createElement("p");
     note.className = "routing-cost-footnote";
-    note.textContent = "This snapshot does not yet publish station-to-station run times, so the estimate reports waiting only. The selected path remains the topology result above.";
+    note.textContent = "This snapshot does not yet publish station-to-station run times. After the first unknown segment, later boardings are evaluated against the selected clock rather than a guessed arrival time. The selected path remains the topology result above.";
     result.append(note);
   }
 }
@@ -452,6 +469,7 @@ if (typeof module !== "undefined" && module.exports) {
     formatDuration,
     kualaLumpurNowParts,
     parseClockTime,
+    routingFrequencyDataLoaded,
     serviceIdForDate,
   };
 }
