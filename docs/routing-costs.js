@@ -363,7 +363,7 @@ function installRoutingCostControls() {
 }
 
 function routingFrequencyDataLoaded(appState) {
-  return Boolean(appState?.manifest && Array.isArray(appState.frequencies));
+  return Boolean(appState?.summary && Array.isArray(appState.frequencies));
 }
 
 function waitForRoutingCostData(attempt = 0) {
