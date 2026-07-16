@@ -114,9 +114,9 @@ function sameLineContext() {
   const { stationModel } = modelContext();
   const { integratedGraph } = graphContext();
   const kj1 = stationModel.groupByStopId.get("KJ1")?.id;
-  const kj37 = stationModel.groupByStopId.get("KJ37")?.id;
-  const sameLinePath = findRoutingPath(integratedGraph, kj1, kj37);
-  cache.sameLine = { kj1, kj37, sameLinePath };
+  const kj5 = stationModel.groupByStopId.get("KJ5")?.id;
+  const sameLinePath = findRoutingPath(integratedGraph, kj1, kj5);
+  cache.sameLine = { kj1, kj5, sameLinePath };
   return cache.sameLine;
 }
 
@@ -185,14 +185,16 @@ function testGraphs() {
 
 function testPath() {
   const { sameLinePath } = sameLineContext();
-  assert(sameLinePath, "Expected an end-to-end Kelana Jaya path");
+  assert(sameLinePath, "Expected a Kelana Jaya path from KJ1 to KJ5");
+  assert.equal(sameLinePath.hops, 4);
   assert(sameLinePath.edges.every((edge) => edge.kind === "ride"));
+  assert(sameLinePath.edges.every((edge) => edge.route_id === "KJ"));
   assert.equal(sameLinePath.line_changes, 0);
 }
 
 function testShapes() {
   const { sameLinePath } = sameLineContext();
-  assert(sameLinePath, "Expected an end-to-end Kelana Jaya path before shape clipping");
+  assert(sameLinePath, "Expected a Kelana Jaya path before shape clipping");
   const { integratedGraph } = graphContext();
   const { snapshot } = snapshotContext();
   const shapeSegments = sameLinePath.edges.map((edge) =>
