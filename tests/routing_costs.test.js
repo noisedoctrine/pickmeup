@@ -6,6 +6,7 @@ const {
   addCalendarDays,
   estimateRoutingPath,
   parseClockTime,
+  routingFrequencyDataLoaded,
   serviceIdForDate,
 } = require("../docs/routing-costs.js");
 
@@ -80,6 +81,16 @@ const frequencies = [
     end_time_seconds: 86400,
     headway_secs: 600,
   },
+  {
+    route_id: "KJ",
+    direction_id: "0",
+    service_id: "MonFri",
+    start_time: "6:00:00",
+    end_time: "24:00:00",
+    start_time_seconds: 21600,
+    end_time_seconds: 86400,
+    headway_secs: 240,
+  },
 ];
 
 const schedule = new HeadwaySchedule(frequencies);
@@ -90,6 +101,8 @@ assert.equal(serviceIdForDate("2026-07-19"), "Sun");
 assert.equal(addCalendarDays("2026-03-01", -1), "2026-02-28");
 assert.equal(parseClockTime("08:15"), 29700);
 assert.equal(parseClockTime("24:00"), null);
+assert.equal(routingFrequencyDataLoaded({ manifest: null, frequencies: [] }), false);
+assert.equal(routingFrequencyDataLoaded({ manifest: {}, frequencies: [] }), true);
 
 const peak = schedule.activeWindow("AG", "0", "2026-07-17", parseClockTime("08:15"));
 assert.equal(peak.headway_secs, 180);
@@ -126,11 +139,43 @@ assert.equal(estimate.boardings[1].available, false);
 assert.equal(estimate.total_waiting_seconds, 90);
 assert.equal(estimate.missing_travel_times, 4);
 assert.equal(estimate.unavailable_boardings, 1);
+assert.equal(estimate.boardings[1].clock_basis, "selected");
+assert.equal(estimate.boardings[1].boarding_seconds, parseClockTime("08:15"));
 
 assert.equal(
   estimateRoutingPath(path, schedule, { mode: "time-aware", date: "2026-07-17", seconds: null }),
   null,
 );
+
+const progressed = estimateRoutingPath(
+  {
+    edges: [
+      {
+        kind: "ride",
+        route_id: "AG",
+        direction_id: "0",
+        from: "A",
+        to: "B",
+        travel_time_seconds: 60,
+      },
+      { kind: "transfer", from: "B", to: "C", travel_time_seconds: 120 },
+      {
+        kind: "ride",
+        route_id: "KJ",
+        direction_id: "0",
+        from: "C",
+        to: "D",
+        travel_time_seconds: 90,
+      },
+    ],
+  },
+  schedule,
+  { mode: "time-aware", date: "2026-07-17", seconds: parseClockTime("08:15") },
+);
+assert.equal(progressed.boardings[1].clock_basis, "progressed");
+assert.equal(progressed.boardings[1].boarding_seconds, parseClockTime("08:19:30"));
+assert.equal(progressed.boardings[1].wait_seconds, 120);
+assert.equal(progressed.missing_travel_times, 0);
 
 const legacy = estimateRoutingPath(
   { edges: path.edges.slice(0, 2) },
