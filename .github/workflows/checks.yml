@@ -60,5 +60,20 @@ jobs:
             node "${test_file}"
           done < <(find tests -type f -name '*.test.js' ! -name 'pages_snapshot.test.js' | sort)
 
-      - name: Run cached Pages snapshot integration test
-        run: node tests/pages_snapshot.test.js
+      - name: Validate Pages assets and manifest
+        run: node tests/pages_snapshot.test.js assets
+
+      - name: Validate cached station model
+        run: node tests/pages_snapshot.test.js model
+
+      - name: Validate cached graph representations
+        run: node tests/pages_snapshot.test.js graphs
+
+      - name: Validate cached same-line path
+        run: node tests/pages_snapshot.test.js path
+
+      - name: Validate cached GTFS shape clipping
+        run: node tests/pages_snapshot.test.js shapes
+
+      - name: Validate cached curated transfers
+        run: node tests/pages_snapshot.test.js transfers
