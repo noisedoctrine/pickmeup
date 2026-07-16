@@ -101,8 +101,8 @@ assert.equal(serviceIdForDate("2026-07-19"), "Sun");
 assert.equal(addCalendarDays("2026-03-01", -1), "2026-02-28");
 assert.equal(parseClockTime("08:15"), 29700);
 assert.equal(parseClockTime("24:00"), null);
-assert.equal(routingFrequencyDataLoaded({ manifest: null, frequencies: [] }), false);
-assert.equal(routingFrequencyDataLoaded({ manifest: {}, frequencies: [] }), true);
+assert.equal(routingFrequencyDataLoaded({ summary: null, frequencies: [] }), false);
+assert.equal(routingFrequencyDataLoaded({ summary: {}, frequencies: [] }), true);
 
 const peak = schedule.activeWindow("AG", "0", "2026-07-17", parseClockTime("08:15"));
 assert.equal(peak.headway_secs, 180);
