@@ -13,6 +13,9 @@ const {
   findRoutingPath,
   summarizeRoutingGraph,
 } = require("../docs/routing-lab.js");
+const {
+  routingShapeSegment,
+} = require("../docs/routing-lab-ui.js");
 
 const repositoryRoot = path.resolve(__dirname, "..");
 const docsRoot = path.join(repositoryRoot, "docs");
@@ -43,6 +46,7 @@ function assertLocalPageAssetsExist() {
     "station-model.js",
     "map-refinements.js",
     "routing-lab.js",
+    "routing-lab-ui.js",
   ].map((filename) => html.indexOf(`src="${filename}"`));
   assert(scriptOrder.every((position) => position >= 0), "Expected Pages scripts are present");
   assert.deepEqual(scriptOrder, [...scriptOrder].sort((left, right) => left - right));
@@ -145,6 +149,18 @@ const sameLinePath = findRoutingPath(integratedGraph, kj1, kj37);
 assert(sameLinePath, "Expected an end-to-end Kelana Jaya path");
 assert(sameLinePath.edges.every((edge) => edge.kind === "ride"));
 assert.equal(sameLinePath.line_changes, 0);
+
+const firstRide = sameLinePath.edges[0];
+const firstRideShape = routingShapeSegment(
+  firstRide,
+  integratedGraph.nodes.get(firstRide.from),
+  integratedGraph.nodes.get(firstRide.to),
+  snapshot.shapes.features,
+);
+assert(
+  firstRideShape.length > 2,
+  "Expected the Pages highlight to follow cached GTFS shape geometry",
+);
 
 const kj15 = stationModel.groupByStopId.get("KJ15")?.id;
 const kg15 = stationModel.groupByStopId.get("KG15")?.id;
