@@ -18,7 +18,13 @@ class HeadwaySchedule {
   constructor(frequencies = []) {
     this.rows = frequencies
       .map(normalizeFrequencyRow)
-      .filter((row) => row.route_id && Number.isFinite(row.headway_secs))
+      .filter(
+        (row) =>
+          row.route_id &&
+          Number.isFinite(row.headway_secs) &&
+          Number.isFinite(row.start_time_seconds) &&
+          Number.isFinite(row.end_time_seconds),
+      )
       .sort(compareFrequencyRows);
   }
 
@@ -154,7 +160,9 @@ function advanceClock(date, seconds, deltaSeconds) {
 function estimateRoutingPath(path, schedule, options = {}) {
   const mode = options.mode || ROUTING_COSTS.defaultMode;
   const startDate = options.date;
-  const startSeconds = Number(options.seconds);
+  const rawStartSeconds = options.seconds;
+  if (rawStartSeconds === null || rawStartSeconds === undefined || rawStartSeconds === "") return null;
+  const startSeconds = Number(rawStartSeconds);
   if (!path || !schedule || !startDate || !Number.isFinite(startSeconds)) return null;
 
   let clock = { date: startDate, seconds: startSeconds };
