@@ -1,0 +1,129 @@
+.routing-cost-controls {
+  display: grid;
+  gap: 0.8rem;
+  margin-top: 0.9rem;
+  padding-top: 1rem;
+  border-top: 1px solid rgba(28, 37, 34, 0.14);
+}
+
+.routing-cost-heading,
+.routing-clock-grid,
+.routing-cost-summary {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.7rem;
+}
+
+.routing-cost-heading h3,
+.routing-cost-heading p,
+.routing-cost-summary,
+.routing-cost-context,
+.routing-cost-note,
+.routing-cost-warning,
+.routing-cost-footnote {
+  margin: 0;
+}
+
+.routing-cost-heading h3 {
+  font-size: 1rem;
+}
+
+.routing-clock-grid .routing-field {
+  flex: 1 1 0;
+  min-width: 0;
+}
+
+.routing-field input[type="date"],
+.routing-field input[type="time"] {
+  width: 100%;
+  box-sizing: border-box;
+  border: 1px solid rgba(28, 37, 34, 0.2);
+  border-radius: 0.55rem;
+  background: #fffdf8;
+  color: #1c2522;
+  padding: 0.58rem 0.62rem;
+  font: inherit;
+}
+
+.routing-cost-note,
+.routing-cost-context,
+.routing-cost-footnote {
+  color: #596560;
+  font-size: 0.78rem;
+  line-height: 1.45;
+}
+
+.routing-cost-result {
+  display: grid;
+  gap: 0.65rem;
+  border-radius: 0.75rem;
+  background: rgba(49, 92, 79, 0.07);
+  padding: 0.8rem;
+}
+
+.routing-cost-result.empty-state {
+  color: #596560;
+}
+
+.routing-cost-summary strong,
+.routing-cost-summary span {
+  display: block;
+}
+
+.routing-cost-summary strong {
+  font-size: 1.15rem;
+}
+
+.routing-cost-summary span {
+  color: #596560;
+  font-size: 0.76rem;
+  text-align: right;
+}
+
+.routing-cost-warning {
+  border-left: 3px solid #b96516;
+  background: rgba(185, 101, 22, 0.09);
+  padding: 0.55rem 0.65rem;
+  font-size: 0.78rem;
+  line-height: 1.4;
+}
+
+.routing-wait-list {
+  display: grid;
+  gap: 0.55rem;
+  margin: 0;
+  padding-left: 1.2rem;
+}
+
+.routing-wait-list li {
+  padding-left: 0.15rem;
+}
+
+.routing-wait-list strong,
+.routing-wait-list span {
+  display: block;
+}
+
+.routing-wait-list strong {
+  font-size: 0.82rem;
+}
+
+.routing-wait-list span {
+  margin-top: 0.12rem;
+  color: #596560;
+  font-size: 0.76rem;
+  line-height: 1.4;
+}
+
+.routing-wait-list li.unavailable strong,
+.routing-wait-list li.unavailable span {
+  color: #8f4e15;
+}
+
+@media (max-width: 440px) {
+  .routing-clock-grid {
+    align-items: stretch;
+    flex-direction: column;
+  }
+}
