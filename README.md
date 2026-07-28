@@ -1,5 +1,9 @@
 # pickmeup
 
+> [!TIP]
+> **Explore the demo** RapidKL rail [PickMeUp Interactive Map Demo](https://noisedoctrine.github.io/pickmeup/).
+
+
 PickMeUp is a personal transport experiment built around a question that sounded fun enough to investigate:
 
 > Where could someone taking the train meet someone driving, so they can continue to the same destination without making either journey unnecessarily awful?
